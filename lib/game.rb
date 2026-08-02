@@ -40,6 +40,7 @@ class Game
     until @chances_remaining < 1 do
       print "( #{@masker.do_mask} ) chances remaining #{@chances_remaining} > "
       answer = gets
+      @masker.add_guess(answer)
       @chances_remaining -= 1
     end
   end
