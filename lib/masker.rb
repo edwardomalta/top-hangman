@@ -8,7 +8,7 @@ class Masker
     word_masked = ""
     word_array = @word.split ""
     word_array.map do |char|
-      word_masked = @guessed_chars.include? char ? " #{char}" : " _"
+      word_masked += @guessed_chars.include?(char) ? " #{char}" : " _"
     end
     word_masked.strip
   end

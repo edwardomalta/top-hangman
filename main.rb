@@ -5,4 +5,5 @@ require_relative "lib/game"
 
 game = Game.new
 
+game.set_word("something")
 game.start

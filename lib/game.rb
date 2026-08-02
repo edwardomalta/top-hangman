@@ -9,6 +9,7 @@
 # If he guessed correctly (strings recived -> array) == (array) theres is a winner.
 # If the char is in the array the program must reveal it on the hidden word: guess("v") -> (_ _ v _ _)
 # Then if the letter reveals the last hidden char the player wins and the game ends.
+require_relative "masker"
 
 class Game
   MAX_CHANCES = 10 
@@ -32,11 +33,12 @@ class Game
 
   def set_word(word)
     @word = word
+    @masker = Masker.new(@word)
   end
 
   def loop_guess
     until @chances_remaining < 1 do
-      print "( _ _ _ ) chances remaining #{@chances_remaining} > "
+      print "( #{@masker.do_mask} ) chances remaining #{@chances_remaining} > "
       answer = gets
       @chances_remaining -= 1
     end
