@@ -41,6 +41,8 @@ class Game
       print "( #{@masker.do_mask} ) chances remaining #{@chances_remaining} > "
       answer = gets
       @masker.add_guess(answer)
+      respuesta = @masker.is_word_unmasked? ? "Yes" : "No"
+      puts "Is the word unmasked now? R: #{respuesta}"
       @chances_remaining -= 1
     end
   end
