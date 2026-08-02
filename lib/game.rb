@@ -49,10 +49,17 @@ class Game
   def is_input_a_command?(input)
     input_array = input.split ""
     if input_array[0] == "/"
-      puts "Player entered a command, exiting game..."
+      puts "Player entered a command..."
       return true
     end
     false
+  end
+
+  def do_execute_command(char)
+    # For now only save will work
+    if char == "s"
+      puts "Saving... "
+    end
   end
 
   def loop_guess
@@ -60,7 +67,13 @@ class Game
       print "( #{@masker.do_mask} ) chances remaining #{@chances_remaining} > "
       answer = gets
       if is_input_a_command?(answer)
-        break
+        if answer.split("")[1] == "s"
+          do_execute_command("s")
+          break
+        else
+          puts "Unknown command. Ignoring..."
+          next
+        end
       end
       @masker.add_guess(answer)
       @chances_remaining -= 1
