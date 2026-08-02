@@ -59,7 +59,17 @@ class Game
     # For now only save will work
     if char == "s"
       puts "Saving... "
+      save
     end
+  end
+
+  def save
+    game_status = {
+      :word => @word, 
+      :guessed_chars => @masker.guessed_chars, 
+      :chances_remaining => @chances_remaining
+    }
+    puts "Saving data: #{game_status}"
   end
 
   def loop_guess

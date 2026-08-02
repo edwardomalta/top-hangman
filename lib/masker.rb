@@ -1,4 +1,6 @@
 class Masker
+  attr_accessor :guessed_chars
+
   def initialize(word)
     @word = word
     @guessed_chars = ""
