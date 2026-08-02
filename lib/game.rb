@@ -30,6 +30,10 @@ class Game
     puts "You have #{MAX_CHANCES} chances to guess it. Good Luck!"
   end
 
+  def set_word(word)
+    @word = word
+  end
+
   def loop_guess
     until @chances_remaining < 1 do
       print "( _ _ _ ) chances remaining #{@chances_remaining} > "
