@@ -20,7 +20,7 @@ class Masker
   def is_word_unmasked?
     word_array = @word.split ""
     word_array.all? do |letter|
-      @guesed_chars&.include?(letter)
+      @guessed_chars&.include?(letter)
     end
   end
 end

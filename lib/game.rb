@@ -20,6 +20,14 @@ class Game
   def start
     greet
     loop_guess
+    if @masker.is_word_unmasked?
+      puts "Congratulations!"
+      puts "You win!"
+    else
+      puts "You run out of chances"
+      puts "You lose!"
+      puts "Good luck for the next try."
+    end
   end
 
   def greet(name: "player")
@@ -37,7 +45,7 @@ class Game
   end
 
   def loop_guess
-    until @chances_remaining < 1 do
+    until @chances_remaining < 1 or @masker.is_word_unmasked? do  
       print "( #{@masker.do_mask} ) chances remaining #{@chances_remaining} > "
       answer = gets
       @masker.add_guess(answer)
