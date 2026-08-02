@@ -23,6 +23,8 @@ class Game
     if @masker.is_word_unmasked?
       puts "Congratulations!"
       puts "You win!"
+    elsif @chances_remaining > 0
+      puts "Come back soon!"
     else
       puts "You run out of chances"
       puts "You lose!"
@@ -44,10 +46,22 @@ class Game
     @masker = Masker.new(@word)
   end
 
+  def is_input_a_command?(input)
+    input_array = input.split ""
+    if input_array[0] == "/"
+      puts "Player entered a command, exiting game..."
+      return true
+    end
+    false
+  end
+
   def loop_guess
     until @chances_remaining < 1 or @masker.is_word_unmasked? do  
       print "( #{@masker.do_mask} ) chances remaining #{@chances_remaining} > "
       answer = gets
+      if is_input_a_command?(answer)
+        break
+      end
       @masker.add_guess(answer)
       @chances_remaining -= 1
     end
