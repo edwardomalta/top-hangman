@@ -11,12 +11,13 @@
 # Then if the letter reveals the last hidden char the player wins and the game ends.
 require "yaml"
 require_relative "masker"
+require_relative "filemanager"
 
 class Game
   MAX_CHANCES = 10 
   def initialize(data: {})
     @chances_remaining = data[:chances_remaining] || MAX_CHANCES
-    require 'pry-byebug'; binding.pry
+    @file_manager = FileManager.new
     unless data.empty?
       set_word(data[:word], g_chars: data[:guessed_chars])
       @loaded_game = true
@@ -68,18 +69,7 @@ class Game
       save
     end
   end
-
-  def get_basic_dir
-    basic_dir = `pwd`
-    basic_dir.strip
-  end
-
-  def get_game_dir
-    game_directory = get_basic_dir + "/games/"
-    Dir.mkdir(game_directory) unless Dir.exist?(game_directory)
-    game_directory
-  end
-
+  
   def save
     game_status = {
       :word => @word, 
@@ -90,7 +80,7 @@ class Game
     file_name = `date +%Y-%m-%d-%H-%M-%s`.strip 
     puts "Saving data: #{game_status} in #{file_name}"
 
-    Dir.chdir(get_game_dir)
+    Dir.chdir(@file_manager.get_game_dir)
     File.open(file_name, "w+") do |file|
       file.write(YAML.dump(game_status))
     end
