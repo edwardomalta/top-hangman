@@ -21,6 +21,7 @@ class Game
     unless data.empty?
       set_word(data[:word], g_chars: data[:guessed_chars])
       @loaded_game = true
+      @game_file = data[:game_file]
     end
   end
 
@@ -30,6 +31,7 @@ class Game
     if @masker.is_word_unmasked?
       puts "Congratulations!"
       puts "You win!"
+      File.delete(@game_file) if @loaded_game
     elsif @chances_remaining > 0
       puts "Come back soon!"
     else
@@ -89,6 +91,7 @@ class Game
   def self.load(game)
     game_file = FileManager.new.get_game_dir + game
     data = YAML.load(File.read(game_file))
+    data[:game_file] = game_file
     self.new(data: data)
   end
 
