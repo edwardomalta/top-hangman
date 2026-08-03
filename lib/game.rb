@@ -18,6 +18,7 @@ class Game
   def initialize(data: {})
     @chances_remaining = data[:chances_remaining] || MAX_CHANCES
     @file_manager = FileManager.new
+    @failed_attempts = []
     unless data.empty?
       set_word(data[:word], g_chars: data[:guessed_chars])
       @loaded_game = true
@@ -31,6 +32,7 @@ class Game
     if @masker.is_word_unmasked?
       puts "Congratulations!"
       puts "You win!"
+      reveal_word
       File.delete(@game_file) if @loaded_game
     elsif @chances_remaining > 0
       puts "Come back soon!"
@@ -38,7 +40,12 @@ class Game
       puts "You run out of chances"
       puts "You lose!"
       puts "Good luck for the next try."
+      reveal_word
     end
+  end
+
+  def reveal_word
+    puts "The word was: #{@word}"
   end
 
   def greet(name: "player")
@@ -51,7 +58,7 @@ class Game
   end
 
   def set_word(word, g_chars: "")
-    @word = word
+    @word = word.downcase
     @masker = Masker.new(@word, g_chars: g_chars)
   end
 
@@ -78,14 +85,13 @@ class Game
       :guessed_chars => @masker.guessed_chars, 
       :chances_remaining => @chances_remaining
     }
-    # require "pry-byebug"; binding.pry
     file_name = `date +%Y-%m-%d-%H-%M-%s`.strip 
-    puts "Saving data: #{game_status} in #{file_name}"
 
     Dir.chdir(@file_manager.get_game_dir)
     File.open(file_name, "w+") do |file|
       file.write(YAML.dump(game_status))
     end
+    Dir.chdir(@file_manager.get_basic_dir)
   end
 
   def self.load(game)
@@ -97,8 +103,9 @@ class Game
 
   def loop_guess
     until @chances_remaining < 1 or @masker.is_word_unmasked? do  
+      puts "Last failed attempts: #{@failed_attempts.join(", ")}"
       print "( #{@masker.do_mask} ) chances remaining #{@chances_remaining} > "
-      answer = gets
+      answer = gets.strip
       if is_input_a_command?(answer)
         if answer.split("")[1] == "s"
           do_execute_command("s")
@@ -108,7 +115,14 @@ class Game
           next
         end
       end
-      @masker.add_guess(answer)
+      if answer.split("").length == 1
+        @masker.add_guess(answer.downcase)
+      elsif answer.split("").length > 1 && answer.downcase == @word.downcase
+        @masker.add_guess(answer.downcase)
+      else
+        puts "ups, that did not work"
+      end
+
       @chances_remaining -= 1
     end
   end
