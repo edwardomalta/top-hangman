@@ -10,7 +10,7 @@ class WordPicker
     file_dict = FileManager.new.get_basic_dir + "/dict.txt"
     File.open(file_dict) do |dictionary|
       until dictionary.eof?
-        line = dictionary.readline
+        line = dictionary.readline.strip
         next if line.length < 5 || line.length > 12
         @list_of_words << line.strip
       end
