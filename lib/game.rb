@@ -116,13 +116,14 @@ class Game
         end
       end
       if answer.split("").length == 1
-        @masker.add_guess(answer.downcase)
+        in_the_word = @masker.add_guess(answer.downcase)
       elsif answer.split("").length > 1 && answer.downcase == @word.downcase
-        @masker.add_guess(answer.downcase)
+        in_the_word = @masker.add_guess(answer.downcase)
       else
         puts "ups, that did not work"
+        in_the_word = false
       end
-
+      @failed_attempts << answer.strip unless in_the_word
       @chances_remaining -= 1
     end
   end

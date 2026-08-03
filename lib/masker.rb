@@ -17,6 +17,7 @@ class Masker
 
   def add_guess(char)
     @guessed_chars += char
+    @word.include?(char)
   end
 
   def is_word_unmasked?
