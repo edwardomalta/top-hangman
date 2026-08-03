@@ -14,12 +14,17 @@ require_relative "masker"
 
 class Game
   MAX_CHANCES = 10 
-  def initialize
-    @chances_remaining = MAX_CHANCES
+  def initialize(data: {})
+    @chances_remaining = data[:chances_remaining] || MAX_CHANCES
+    require 'pry-byebug'; binding.pry
+    unless data.empty?
+      set_word(data[:word], g_chars: data[:guessed_chars])
+      @loaded_game = true
+    end
   end
 
   def start
-    greet
+    greet unless @loaded_game
     loop_guess
     if @masker.is_word_unmasked?
       puts "Congratulations!"
@@ -42,9 +47,9 @@ class Game
     puts "You have #{MAX_CHANCES} chances to guess it. Good Luck!"
   end
 
-  def set_word(word)
+  def set_word(word, g_chars: "")
     @word = word
-    @masker = Masker.new(@word)
+    @masker = Masker.new(@word, g_chars: g_chars)
   end
 
   def is_input_a_command?(input)
@@ -89,7 +94,11 @@ class Game
     File.open(file_name, "w+") do |file|
       file.write(YAML.dump(game_status))
     end
+  end
 
+  def self.load(game)
+    data = YAML.load_string(game)
+    self.new(data)
   end
 
   def loop_guess

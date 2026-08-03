@@ -1,9 +1,9 @@
 class Masker
   attr_accessor :guessed_chars
 
-  def initialize(word)
+  def initialize(word, g_chars: "")
     @word = word
-    @guessed_chars = ""
+    @guessed_chars = g_chars
   end
 
   def do_mask
