@@ -1,9 +1,11 @@
 require_relative "lib/game"
 require_relative "lib/gamedector"
+require_relative "lib/wordpicker"
 
 # The responsibility from the welcom belongs to here. Then I can 
 # create a new game, open an saved game.
 
+word_picker = WordPicker.new
 games_saved = GameDetector.new.detect_games
 if games_saved.length > 0
   puts "There are some saved games. Do you want to open one?"
@@ -23,5 +25,5 @@ if games_saved.length > 0
 end 
 game = Game.new
 
-game.set_word("eyes")
+game.set_word(word_picker.pick_word)
 game.start
