@@ -9,6 +9,7 @@
 # If he guessed correctly (strings recived -> array) == (array) theres is a winner.
 # If the char is in the array the program must reveal it on the hidden word: guess("v") -> (_ _ v _ _)
 # Then if the letter reveals the last hidden char the player wins and the game ends.
+require "yaml"
 require_relative "masker"
 
 class Game
@@ -63,13 +64,32 @@ class Game
     end
   end
 
+  def get_basic_dir
+    basic_dir = `pwd`
+    basic_dir.strip
+  end
+
+  def get_game_dir
+    game_directory = get_basic_dir + "/games/"
+    Dir.mkdir(game_directory) unless Dir.exist?(game_directory)
+    game_directory
+  end
+
   def save
     game_status = {
       :word => @word, 
       :guessed_chars => @masker.guessed_chars, 
       :chances_remaining => @chances_remaining
     }
-    puts "Saving data: #{game_status}"
+    # require "pry-byebug"; binding.pry
+    file_name = `date +%Y-%m-%d-%H-%M-%s`.strip 
+    puts "Saving data: #{game_status} in #{file_name}"
+
+    Dir.chdir(get_game_dir)
+    File.open(file_name, "w+") do |file|
+      file.write(YAML.dump(game_status))
+    end
+
   end
 
   def loop_guess
