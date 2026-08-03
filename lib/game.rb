@@ -87,8 +87,9 @@ class Game
   end
 
   def self.load(game)
-    data = YAML.load_string(game)
-    self.new(data)
+    game_file = FileManager.new.get_game_dir + game
+    data = YAML.load(File.read(game_file))
+    self.new(data: data)
   end
 
   def loop_guess
